@@ -6,15 +6,19 @@ ws.onopen = function () {
     console.log("open....");
 };
 
+let caseList = [];
 ws.onmessage = function message(ev) {
     if (typeof ev.data !== "string") return;
-    console.log("received: %s", ev.data);
     const data = JSON.parse(ev.data);
+    console.log(data);
     switch (data.type) {
         case "caseList":
+            caseList = data.data;
             renderCaseList(data.data);
             break;
         case "progress":
+            // debugger;
+            renderProgress(data.data.progress, data.data.id)
             break;
         case "startResult":
             break;
@@ -22,6 +26,7 @@ ws.onmessage = function message(ev) {
             break;
     }
 };
+
 
 function renderCaseList(caseList) {
     const listHtml = caseList
@@ -36,10 +41,38 @@ function renderCaseList(caseList) {
     ul.addEventListener("click", (ev) => {
         console.log("ev.data:", ev);
         if (ev.target.tagName == "LI") {
+            const id = ev.target.dataset.id;
+            renderActTree(id)
         }
     });
 
     root.appendChild(ul);
 }
 
-function renderActTree() {}
+function renderActTree(id) {
+    const actConfig = caseList.find(c => c.id == id);
+    if (!actConfig) return;
+    renderProgress(actConfig.activityConfig, id);
+
+}
+
+function renderProgress(act, id) {
+    const htmlStr = progressFactory.build(act);
+    document.querySelector("#progress").innerHTML = `
+        <div data-id=${id} class='p-root'>${htmlStr}</div>
+    `
+
+}
+
+
+btnRun.addEventListener("click", () => {
+    const pRoot = document.querySelector(".p-root");
+    if (!pRoot) return;
+    const id = pRoot.dataset.id;
+    ws.send(JSON.stringify({
+        type: "start",
+        data: {
+            id
+        }
+    }))
+})

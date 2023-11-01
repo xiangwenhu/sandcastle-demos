@@ -1,8 +1,7 @@
 import { IActivityConfig } from '../../../thief/src/types/activity';
-import { createActivity } from "../../../thief/src/factory/activity";
 import "../../../thief/src/crawlActivityFactory";
 
-const activityProps: IActivityConfig = {
+const activityConfig: IActivityConfig = {
     type: "c.browser",
     name: "创建浏览器",
     options: {
@@ -65,4 +64,4 @@ const activityProps: IActivityConfig = {
     }]
 };
 
-export default createActivity(activityProps);
+export default activityConfig;

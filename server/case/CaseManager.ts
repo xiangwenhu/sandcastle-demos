@@ -1,15 +1,18 @@
-import Activity from "../../../thief/src/activities/Activity";
+import { IActivityConfig } from '../../../thief/src/types/activity';
+import Activity from '../../../thief/src/activities/Activity';
 
-interface CaseItem {
+export interface CaseItem {
     id: string;
     name: string;
-    activity: Activity<any, any, any, any, any>;
+    activityConfig: IActivityConfig;
+    instances?: Activity<any, any, any, any, any>[];
 }
 
 export default class CaseManager {
     #caseMap = new Map<string, CaseItem>();
 
     addCase(caseItem: CaseItem) {
+        caseItem.instances = [];
         this.#caseMap.set(caseItem.id, caseItem);
     }
 
