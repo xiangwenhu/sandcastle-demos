@@ -38,7 +38,12 @@ function startCaseInstance(ws: WebSocket, id: string) {
     caseA.instances = caseA.instances || [];
     caseA.instances.push(instance);
 
-    instance.run().finally(function () {
+    instance.run().then(res => {
+        ws.send(JSON.stringify({
+            type: "result",
+            data: res
+        }))
+    }).finally(function () {
         const caseA = manager.getCase(id);
         if (caseA?.instances) {
             caseA.instances.length = 0;

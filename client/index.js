@@ -22,6 +22,8 @@ ws.onmessage = function message(ev) {
             break;
         case "startResult":
             break;
+        case "result":
+            renderResult(data.data);
         default:
             break;
     }
@@ -75,4 +77,13 @@ btnRun.addEventListener("click", () => {
             id
         }
     }))
+    clearResult();
 })
+
+function clearResult() {
+    message.innerHTML = ''
+}
+
+function renderResult(data) {
+    message.innerHTML = JSON.stringify(data);
+}

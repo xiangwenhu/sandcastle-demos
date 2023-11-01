@@ -35,7 +35,7 @@ const activityConfig: IActivityConfig = {
                 }, {
                     type: "c.page.type",
                     options: {
-                        selector: `#kw`, text: "高源",
+                        selector: `#kw`, text: "美女",
                         options: {
                             delay: 1 * 1000
                         },
