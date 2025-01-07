@@ -1,11 +1,10 @@
-import { IActivityConfig } from '../../../thief/src/types/activity';
-import "../../../thief/src/crawlActivityFactory";
+import { IActivityConfig, $ } from "sandcastle";
 
-const activityConfig: IActivityConfig = {
+const activityConfig: IActivityConfig =  $.c.browser({
     type: "c.browser",
     name: "创建浏览器",
     options: {
-        headless: "new",
+        headless: false,
         ignoreHTTPSErrors: true,
         defaultViewport: null,
         ignoreDefaultArgs: ["--enable-automation"],
@@ -18,6 +17,7 @@ const activityConfig: IActivityConfig = {
             "--unsafely-treat-insecure-origin-as-secure",
         ],
         timeout: 60 * 1000,
+        "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     },
     children: [
         {
@@ -32,11 +32,11 @@ const activityConfig: IActivityConfig = {
                             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
                     },
                 },
-                {
+                $.c.page.goto({
                     type: "c.page.goto",
                     name: "跳转到快手",
                     options: { url: "https://www.kuaishou.com/" },
-                },
+                }),
                 {
                     type: "delay",
                     name: "延时10秒",
@@ -84,6 +84,6 @@ const activityConfig: IActivityConfig = {
             ],
         },
     ],
-};
+});
 
 export default activityConfig;

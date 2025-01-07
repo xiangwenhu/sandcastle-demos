@@ -1,7 +1,12 @@
 {
-  "name": "thief-test",
-  "version": "1.0.0", 
+  "name": "sandcastle-demos",
+  "version": "1.0.0",
+  "dependencies": {
+    "sandcastle": "file:D:\\projects\\github-my\\sandcastle\\sandcastle-0.0.1.tgz",
+    "ws": "^8.18.0"
+  },
   "devDependencies": {
+    "@types/ws": "^8.5.13",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

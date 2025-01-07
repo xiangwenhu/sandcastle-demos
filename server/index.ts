@@ -1,9 +1,8 @@
-import Activity from "../../thief/src/activities/Activity";
-import { createActivity } from "../../thief/src/factory/activity";
-import getProgress from "../../thief/src/progress";
-import { EnumActivityStatus } from "../../thief/src/types/enum";
+import Activity from "sandcastle/dist/activities/Activity";
 import manager from "./case";
 import { wss } from "./wss";
+import { createActivity, EnumActivityStatus } from "sandcastle";
+import getProgress from "sandcastle/dist/progress/index"
 
 wss.on("connection", function (ws) {
     ws.send(
@@ -32,7 +31,7 @@ function startCaseInstance(ws: WebSocket, id: string) {
     const caseA = manager.getCase(id);
     if (!caseA) return;
 
-    let instance: Activity<any, any, any, any, any>;
+    let instance: Activity<any, any, any>;
     if (caseA.instances && caseA.instances.length > 0) {
         instance = caseA.instances[0];
         const progress = getProgress(instance);

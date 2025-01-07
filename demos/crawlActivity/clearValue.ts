@@ -1,6 +1,6 @@
-import { IActivityConfig } from "sandcastle";
+import { IActivityConfig, createActivity} from 'sandcastle';
 
-const activityConfig: IActivityConfig = {
+const activityProps: IActivityConfig = {
     type: "c.browser",
     name: "创建浏览器",
     options: {
@@ -35,7 +35,7 @@ const activityConfig: IActivityConfig = {
                 }, {
                     type: "c.page.type",
                     options: {
-                        selector: `#kw`, text: "美女",
+                        selector: `#kw`, text: "高山流水",
                         options: {
                             delay: 1 * 1000
                         },
@@ -64,4 +64,6 @@ const activityConfig: IActivityConfig = {
     }]
 };
 
-export default activityConfig;
+const activity = createActivity(activityProps);
+
+activity.run();

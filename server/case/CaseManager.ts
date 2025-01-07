@@ -1,11 +1,11 @@
-import { IActivityConfig } from '../../../thief/src/types/activity';
-import Activity from '../../../thief/src/activities/Activity';
+import { IActivityConfig } from "sandcastle";
+import Activity from "sandcastle/dist/activities/Activity";
 
 export interface CaseItem {
     id: string;
     name: string;
     activityConfig: IActivityConfig;
-    instances?: Activity<any, any, any, any, any>[];
+    instances?: Activity<any, any, any>[];
 }
 
 export default class CaseManager {
