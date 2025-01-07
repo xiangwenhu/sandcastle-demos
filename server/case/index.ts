@@ -8,7 +8,7 @@ const manager = new CaseManager();
 manager.addCase({
     id: "1",
     name: "clearValue",
-    activityConfig: clearValue
+    activityConfig:   clearValue
 });
 
 manager.addCase({

@@ -2,13 +2,16 @@ import Activity from "sandcastle/dist/activities/Activity";
 import manager from "./case";
 import { wss } from "./wss";
 import { createActivity, EnumActivityStatus } from "sandcastle";
-import getProgress from "sandcastle/dist/progress/index"
+import pm from "sandcastle/dist/progress/index"
 
 wss.on("connection", function (ws) {
     ws.send(
         JSON.stringify({
             type: "caseList",
-            data: manager.toList(),
+            data: manager.toList().map(c => ({
+                ...c,
+                progress: pm.getProgress(createActivity(c.activityConfig))
+            })),
         })
     );
 
@@ -34,7 +37,7 @@ function startCaseInstance(ws: WebSocket, id: string) {
     let instance: Activity<any, any, any>;
     if (caseA.instances && caseA.instances.length > 0) {
         instance = caseA.instances[0];
-        const progress = getProgress(instance);
+        const progress = pm.getProgress(instance);
 
         ws.send(JSON.stringify({
             type: 'progress',
@@ -63,7 +66,7 @@ function startCaseInstance(ws: WebSocket, id: string) {
 
     instance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
         // console.log( act.type, act.name, ACTIVITY_STATUS_MAP[status])
-        const progress = getProgress(instance);
+        const progress = pm.getProgress(instance);
 
         ws.send(JSON.stringify({
             type: 'progress',

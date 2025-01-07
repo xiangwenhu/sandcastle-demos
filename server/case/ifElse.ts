@@ -1,10 +1,9 @@
 import { $, createActivity } from "sandcastle";
 
-
 const activityConfig = $.ifElse({
     name: 'if else 测试',
     context: {
-        count: 6
+        count: 1
     },
     if: {
         useParentCtx: true,
@@ -114,3 +113,4 @@ const activityConfig = $.ifElse({
 })
 
 export default activityConfig;
+

@@ -54,7 +54,7 @@ function renderCaseList(caseList) {
 function renderActTree(id) {
     const actConfig = caseList.find(c => c.id == id);
     if (!actConfig) return;
-    renderProgress(actConfig.activityConfig, id);
+    renderProgress(actConfig.progress, id);
 
 }
 

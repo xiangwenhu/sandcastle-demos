@@ -11,7 +11,7 @@ const progressFactory = {
     },
     fromServer: true,
     build(data) {
-        this.adjust(data);
+        // this.adjust(data);
         data.status = data.status || '0'
         let childrenHTML = Array.isArray(data.children) ? this.buildChildren(data.children) : '',
             result = `

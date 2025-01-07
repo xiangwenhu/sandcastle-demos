@@ -2,7 +2,7 @@
   "name": "sandcastle-demos",
   "version": "1.0.0",
   "dependencies": {
-    "sandcastle": "file:D:\\projects\\github-my\\sandcastle\\sandcastle-0.0.1.tgz",
+    "sandcastle": "file:D:\\projects\\github-my\\sandcastle\\sandcastle-0.0.1003.tgz",
     "ws": "^8.18.0"
   },
   "devDependencies": {
