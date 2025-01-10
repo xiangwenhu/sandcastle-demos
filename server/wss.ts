@@ -19,7 +19,7 @@ const wss = new WebSocketServer(
             serverMaxWindowBits: 10, // Defaults to negotiated value.
             // Below options specified as default values.
             concurrencyLimit: 10, // Limits zlib concurrency for perf.
-            threshold: 1024, // Size (in bytes) below which messages
+            threshold: 1024 * 1024, // Size (in bytes) below which messages
             // should not be compressed if context takeover is disabled.
         },
     },

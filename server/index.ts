@@ -54,7 +54,11 @@ function startCaseInstance(ws: WebSocket, id: string) {
         instance.run().then(res => {
             ws.send(JSON.stringify({
                 type: "result",
-                data: res
+                data: {
+                    type: caseA.activityConfig.type,
+                    name: caseA.name,
+                    data: res
+                }
             }))
         }).finally(function () {
             const caseA = manager.getCase(id);

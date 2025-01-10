@@ -4,6 +4,7 @@ import Activity from "sandcastle/dist/activities/Activity";
 export interface CaseItem {
     id: string;
     name: string;
+    title: string;
     activityConfig: IActivityConfig;
     instances?: Activity<any, any, any>[];
 }

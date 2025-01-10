@@ -1,4 +1,6 @@
-import { IActivityConfig } from "sandcastle";
+import { $, IActivityConfig } from "sandcastle";
+import fs from "fs"
+import path from "path";
 
 const activityConfig: IActivityConfig = {
     type: "c.browser",
@@ -7,12 +9,12 @@ const activityConfig: IActivityConfig = {
         headless: false,
         "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     },
-    children: [{
-        type: "parallel",
-        name: "并行",
+    children: [$.sequence({
+        type: "sequence",
+        name: "顺序执行",
         children: [{
             type: "c.page",
-            name: "快手页面啊",
+            name: "百度页面啊",
             children: [
                 {
                     type: "code",
@@ -23,7 +25,7 @@ const activityConfig: IActivityConfig = {
                     type: "c.page.goto",
                     name: "跳转",
                     options: {
-                        url: "https://www.baidu.com/", options: {
+                        url: "https://top.baidu.com/board?tab=realtime", options: {
                             "waitUntil": "load"
                         }
                     },
@@ -31,37 +33,32 @@ const activityConfig: IActivityConfig = {
                 }, {
                     type: "c.page.waitForSelector",
                     name: "等待节点",
-                    options: { selector: "#kw" },
-                }, {
-                    type: "c.page.type",
-                    options: {
-                        selector: `#kw`, text: "美女",
-                        options: {
-                            delay: 1 * 1000
-                        },
-                    },
-                    name: "输入",
-
+                    options: { selector: "#sanRoot" },
                 },
                 {
                     type: "delay",
                     options: { timeout: 2000 },
                     name: "等待2s"
                 },
-                {
-                    type: "c.page.clearValue",
-                    options: { selector: '#kw' },
-                    name: "清空值"
-                },
-                {
-                    type: "delay",
-                    options: { timeout: 10 * 1000 },
-                    name: "等待10s"
-                },
+                $.c.page.evaluate({
+                    name: "获取节点内容",
+                    options: {
+                        args: [],
+                        async code() {
+                            // @ts-ignore
+                            const links = document.querySelector(`[class^=container-bg]`).querySelectorAll(`a[class^="title_"]`) as any as HTMLAnchorElement[];
+
+                            return Array.from(links).map(l => ({
+                                href: l.getAttribute("href"),
+                                title: l.textContent || ''
+                            }))
+                        }
+                    }
+                })
             ]
         }
         ]
-    }]
+    })]
 };
 
 export default activityConfig;
