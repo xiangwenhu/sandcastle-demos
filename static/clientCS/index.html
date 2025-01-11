@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../css/index.css" />
+        <title>沙堡-客户端配置-服务端执行</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <hr />
+        <div id="act">
+            <button type="button" id="btnRun">执行</button>
+            <div id="progress"></div>
+        </div>
+        <hr />
+        <div>
+            结果:
+            <pre id="message"></pre>
+        </div>
+
+        <script>
+            // interface CaseItem {
+            //     id: string;
+            //     name: string;
+            //     title: string;
+            //     activityConfig: IActivityConfig;
+            // }
+            const caseList = [
+                {
+                    id: 1,
+                    name: "break",
+                    title: "break测试",
+                },
+                {
+                    id: 2,
+                    name: "for",
+                    title: "for",
+                },
+                {
+                    id: 3,
+                    name: "ifElse",
+                    title: "ifElse",
+                },
+                {
+                    id: 4,
+                    name: "parallel",
+                    title: "parallel",
+                },
+                {
+                    id: 5,
+                    name: "race",
+                    title: "race",
+                },
+                {
+                    id: 6,
+                    name: "request",
+                    title: "request",
+                },
+                {
+                    id: 7,
+                    name: "while",
+                    title: "while",
+                },
+            ];
+        </script>
+        <script src="../scripts/progressFactory.js"></script>
+        <script src="./index.js"></script>
+        <script>
+            renderCaseList(caseList);
+        </script>
+    </body>
+</html>

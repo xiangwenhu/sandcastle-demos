@@ -1,10 +1,37 @@
 import Activity from "sandcastle/dist/activities/Activity";
 import manager from "./case";
+import { CaseItem } from "./case/CaseManager";
+
 import { wss } from "./wss";
 import { createActivity, EnumActivityStatus } from "sandcastle";
 import pm from "sandcastle/dist/progress/index"
 
 wss.on("connection", function (ws) {
+    ws.on("message", (buffer) => {
+        try {
+            const jsonData = JSON.parse(buffer.toString());
+            const { type, data } = jsonData;
+            switch (type) {
+                case "caseList":
+                    sendCaseList(ws as any);
+                    break;
+                case "start":
+                    startCaseInstance(ws as any, data.id);
+                    break;
+                case "startByConfig":
+                    startCaseByConfig(ws as any, data);
+                    break;
+                default:
+                    break;
+            }
+        } catch (err) {
+            console.error("message error", err);
+        }
+    })
+});
+
+
+function sendCaseList(ws: WebSocket) {
     ws.send(
         JSON.stringify({
             type: "caseList",
@@ -14,20 +41,7 @@ wss.on("connection", function (ws) {
             })),
         })
     );
-
-    ws.on("message", (buffer) => {
-        const jsonData = JSON.parse(buffer.toString());
-        const { type, data } = jsonData;
-        switch (type) {
-            case "start":
-                startCaseInstance(ws as any, data.id)
-            default:
-                break;
-        }
-
-    })
-});
-
+}
 
 function startCaseInstance(ws: WebSocket, id: string) {
 
@@ -76,6 +90,36 @@ function startCaseInstance(ws: WebSocket, id: string) {
             type: 'progress',
             data: {
                 id,
+                progress
+            }
+        }))
+    });
+}
+
+function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
+
+    const instance = createActivity(caseItem.activityConfig);
+
+    instance.run().then(res => {
+        ws.send(JSON.stringify({
+            type: "result",
+            data: {
+                type: caseItem.activityConfig.type,
+                name: caseItem.name,
+                data: res
+            }
+        }))
+    }).catch(err=> {
+        console.log("instance.run error", err)
+    });
+
+    instance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
+        const progress = pm.getProgress(instance);
+
+        ws.send(JSON.stringify({
+            type: 'progress',
+            data: {
+                id: caseItem.id,
                 progress
             }
         }))
