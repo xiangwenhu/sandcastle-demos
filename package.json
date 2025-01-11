@@ -1,6 +1,9 @@
 {
   "name": "sandcastle-demos",
   "version": "1.0.0",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "sandcastle": "file:D:\\projects\\github-my\\sandcastle\\sandcastle-0.0.1008.tgz",
     "ws": "^8.18.0"

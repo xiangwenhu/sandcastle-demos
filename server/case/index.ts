@@ -7,7 +7,7 @@ const manager = new CaseManager();
 
 manager.addCase({
     id: "1",
-    name: "badiHot",
+    name: "baiduHot",
     title: "百度热搜（页面节点解析)",
     activityConfig:   clearValue
 });
@@ -23,7 +23,7 @@ manager.addCase({
 manager.addCase({
     id: "3",
     name: "IFElse",
-    title: "IFEsle",
+    title: "IFElse",
     activityConfig: ifElse
 })
 

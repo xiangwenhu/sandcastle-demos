@@ -4,6 +4,12 @@ ws.onerror = console.error;
 
 ws.onopen = function () {
   console.log("open....");
+  ws.send(
+    JSON.stringify({
+      type: "caseList",
+      data: { },
+    })
+  );
 };
 
 let caseList = [];
@@ -31,7 +37,7 @@ ws.onmessage = function message(ev) {
 
 function renderCaseList(caseList) {
   const listHtml = caseList
-    .map((item) => `<li class='case-item' data-id=${item.id}>${item.name}</li>`)
+    .map((item) => `<li class='case-item' data-id=${item.id}>${item.title}</li>`)
     .join("");
 
   const ul = document.createElement("ul");
