@@ -1,4 +1,6 @@
-const ws = new WebSocket("ws://127.0.0.1:8080");
+
+
+const ws = new WebSocket(`ws://${location.hostname}:8080`);
 
 ws.onerror = console.error;
 
@@ -63,6 +65,9 @@ async function renderActTree(id) {
         caseItem.activityConfig = eval(content.trim().replace(/(;)$/, ""));
     }
 
+    renderConfigContent(caseItem);
+
+
     renderProgress(caseItem.activityConfig, id);
 }
 
@@ -72,6 +77,13 @@ function renderProgress(act, id) {
         <div data-id=${id} class='p-root'>${htmlStr}</div>
     `;
 }
+
+
+
+function renderConfigContent(caseItem){
+    codeContent.innerHTML = JSON.stringify(caseItem.activityConfig, undefined , 2);
+}
+
 
 btnRun.addEventListener("click", () => {
     const pRoot = document.querySelector(".p-root");
