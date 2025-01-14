@@ -53,10 +53,20 @@ function renderCaseList(caseList) {
   root.appendChild(ul);
 }
 
+
+function renderConfigContent(caseItem) {
+  codeContent.value = JSON.stringify(caseItem.activityConfig, undefined, 2);
+}
+
 function renderActTree(id) {
-  const actConfig = caseList.find((c) => c.id == id);
-  if (!actConfig) return;
-  renderProgress(actConfig.progress, id);
+  const caseItem = caseList.find((c) => c.id == id);
+  if (!caseItem) return;
+
+
+
+  renderConfigContent(caseItem);
+
+  renderProgress(caseItem.progress, id);
 }
 
 function renderProgress(act, id) {
@@ -70,6 +80,7 @@ btnRun.addEventListener("click", () => {
   const pRoot = document.querySelector(".p-root");
   if (!pRoot) return;
   const id = pRoot.dataset.id;
+  
   ws.send(
     JSON.stringify({
       type: "start",

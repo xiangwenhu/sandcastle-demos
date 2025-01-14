@@ -6,7 +6,7 @@ const activityConfig: IActivityConfig = {
     type: "c.browser",
     name: "创建浏览器",
     options: {
-        headless: false,
+        headless: true,
         "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     },
     children: [$.sequence({

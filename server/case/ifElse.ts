@@ -45,6 +45,7 @@ const activityConfig = $.ifElse({
         type: "sequence",
         assert: '$ctx.count <=10 ',
         name: '如果count小于等于10',
+        useParentCtx: true,
         children: [{
             type: 'code',
             name: '分支输出',
@@ -62,6 +63,7 @@ const activityConfig = $.ifElse({
         type: "sequence",
         assert: '$ctx.count <=15 ',
         name: '如果count小于等于15',
+        useParentCtx: true,
         children: [{
             type: 'code',
             name: '分支输出',
@@ -79,6 +81,7 @@ const activityConfig = $.ifElse({
         type: "sequence",
         assert: '$ctx.count <=25 ',
         name: '如果count小于等于25',
+        useParentCtx: true,
         children: [{
             type: 'code',
             name: '分支输出',
@@ -96,6 +99,7 @@ const activityConfig = $.ifElse({
     else: {
         type: "sequence",
         name: '如果count大于25',
+        useParentCtx: true,
         children: [{
             type: 'code',
             name: '分支输出',

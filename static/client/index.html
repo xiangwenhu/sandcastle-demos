@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/index.css" />
     <title>客户端-服务端配置-服务端执行</title>
-</head>
+  </head>
 
-<body>
-    <div id="root">
-    </div>
+  <body>
+    <div id="root"></div>
 
     <hr />
     <div id="act">
-        <button type="button" id="btnRun">执行</button>
-        <div id="progress">
-
+      <button type="button" id="btnRun">执行</button>
+      <div style="display: flex">
+        <div style="flex: 0 0 40%; height: 500px; overflow-y: auto">
+          配置内容
+          <pre>
+                <textarea id="codeContent" disabled></textarea>
+            </pre>
         </div>
+
+        <div style="flex: 0 0 60%">
+          流程：
+          <div id="progress"></div>
+        </div>
+      </div>
     </div>
     <hr />
     <div>
-        结果:
-        <div id="message">
-
-        </div>
+      结果:
+      <div id="message"></div>
     </div>
-
-
 
     <script src="../scripts/progressFactory.js"></script>
     <script src="./index.js"></script>
-</body>
-
+  </body>
 </html>
