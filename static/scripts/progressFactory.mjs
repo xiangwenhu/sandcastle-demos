@@ -1,4 +1,4 @@
-const progressFactory = {
+export const progressFactory = {
     mapping: {
         0: '未初始化',
         1: '初始化',

@@ -1,15 +1,25 @@
-import { $, IActivityConfig } from "sanddunes";
-import fs from "fs"
-import path from "path";
+import { IActivityConfig } from "sanddunes";
 
 const activityConfig: IActivityConfig = {
     type: "c.browser",
     name: "创建浏览器",
     options: {
         headless: true,
+        ignoreHTTPSErrors: true,
+        defaultViewport: null,
+        ignoreDefaultArgs: ["--enable-automation"],
+        args: [
+            "--start-maximized",
+            "--no-sandbox",
+            "--disable-web-security",
+            "--disable-setuid-sandbox",
+            "--allow-running-insecure-content",
+            "--unsafely-treat-insecure-origin-as-secure",
+        ],
+        timeout: 60 * 1000,
         "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     },
-    children: [$.sequence({
+    children: [{
         type: "sequence",
         name: "顺序执行",
         children: [{
@@ -40,7 +50,8 @@ const activityConfig: IActivityConfig = {
                     options: { timeout: 2000 },
                     name: "等待2s"
                 },
-                $.c.page.evaluate({
+                {
+                    type: "c.page.evaluate",
                     name: "获取节点内容",
                     options: {
                         args: [],
@@ -54,11 +65,11 @@ const activityConfig: IActivityConfig = {
                             }))
                         }
                     }
-                })
+                }
             ]
         }
         ]
-    })]
+    }]
 };
 
 export default activityConfig;

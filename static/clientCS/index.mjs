@@ -1,3 +1,8 @@
+import { progressFactory } from "../scripts/progressFactory.mjs";
+import { ObjectJSONConverter } from "../scripts/converter.mjs";
+
+const converter = new ObjectJSONConverter();
+
 const ws = new WebSocket(`ws://${location.hostname}:8080`);
 
 ws.onerror = console.error;
@@ -21,9 +26,11 @@ ws.onmessage = function message(ev) {
   }
 };
 
-function renderCaseList(cases) {
+export function renderCaseList(cases) {
   const listHtml = cases
-    .map((item) => `<li class='case-item' data-id=${item.id}>${item.name}</li>`)
+    .map(
+      (item) => `<li class='case-item' data-id=${item.id}>${item.title}</li>`
+    )
     .join("");
 
   const ul = document.createElement("ul");
@@ -55,7 +62,8 @@ async function renderActTree(id) {
 
   if (!caseItem.activityConfig) {
     const content = await fetchCaseItem(caseItem);
-    caseItem.activityConfig = eval(content.trim().replace(/(;)$/, ""));
+    const activityConfig = eval(content.trim().replace(/(;)$/, ""));
+    caseItem.activityConfig = activityConfig;
   }
 
   renderConfigContent(caseItem);
@@ -71,7 +79,13 @@ function renderProgress(act, id) {
 }
 
 function renderConfigContent(caseItem) {
-  codeContent.value = JSON.stringify(caseItem.activityConfig, undefined, 2);
+  const activityConfig = JSON.parse(
+    converter.toJSON(caseItem.activityConfig), // .replace(/(__\$\$__function__\$\$__,)/, "")
+    undefined,
+    2
+  );
+
+  codeContent.value = JSON.stringify(activityConfig, undefined, 2);
 }
 
 btnRun.addEventListener("click", () => {
@@ -106,7 +120,7 @@ function clearResult() {
 const resultHandlerMap = {
   __default__(data) {
     if (typeof data == "object") {
-      return JSON.stringify(data.data);
+      return JSON.stringify(data.data, undefined, "\t");
     }
 
     return data.data;
@@ -119,3 +133,7 @@ function renderResult(data) {
   );
   message.innerHTML = result;
 }
+
+(async function () {
+  renderCaseList(caseList);
+})();
