@@ -1,4 +1,4 @@
-import { IActivityConfig, $ } from "sandcastle";
+import { IActivityConfig, $ } from "sanddunes";
 
 const activityConfig: IActivityConfig =  $.c.browser({
     type: "c.browser",

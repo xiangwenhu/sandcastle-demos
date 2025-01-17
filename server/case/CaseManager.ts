@@ -1,5 +1,5 @@
-import { IActivityConfig } from "sandcastle";
-import Activity from "sandcastle/dist/activities/Activity";
+import { IActivityConfig } from "sanddunes";
+import Activity from "sanddunes/dist/activities/Activity";
 
 export interface CaseItem {
     id: string;

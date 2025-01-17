@@ -1,10 +1,10 @@
-import Activity from "sandcastle/dist/activities/Activity";
+import Activity from "sanddunes/dist/activities/Activity";
 import manager from "./case";
 import { CaseItem } from "./case/CaseManager";
 
 import { wss } from "./wss";
-import { createActivity, EnumActivityStatus } from "sandcastle";
-import pm from "sandcastle/dist/progress/index"
+import { createInstance, EnumActivityStatus, ObjectJSONConverter } from "sanddunes";
+import pm from "sanddunes/dist/progress/index"
 
 wss.on("connection", function (ws) {
     ws.on("message", (buffer) => {
@@ -31,14 +31,27 @@ wss.on("connection", function (ws) {
 });
 
 
+const converter = new ObjectJSONConverter()
+
 function sendCaseList(ws: WebSocket) {
+
+    let instance = createInstance();
+
     ws.send(
         JSON.stringify({
             type: "caseList",
-            data: manager.toList().map(c => ({
-                ...c,
-                progress: pm.getProgress(createActivity(c.activityConfig))
-            })),
+            data: manager.toList().map(c => {
+
+                const copy = {
+                    ...c,
+                }
+                copy.activityConfig = JSON.parse(converter.toJSON(c.activityConfig))
+
+                return ({
+                    ...copy,
+                    progress: pm.getProgress(instance.createActivity(c.activityConfig))
+                })
+            }),
         })
     );
 }
@@ -48,10 +61,10 @@ function startCaseInstance(ws: WebSocket, id: string) {
     const caseA = manager.getCase(id);
     if (!caseA) return;
 
-    let instance: Activity<any, any, any>;
+    let actInstance: Activity<any, any, any>;
     if (caseA.instances && caseA.instances.length > 0) {
-        instance = caseA.instances[0];
-        const progress = pm.getProgress(instance);
+        actInstance = caseA.instances[0];
+        const progress = pm.getProgress(actInstance);
 
         ws.send(JSON.stringify({
             type: 'progress',
@@ -61,11 +74,12 @@ function startCaseInstance(ws: WebSocket, id: string) {
             }
         }))
     } else {
-        instance = createActivity(caseA.activityConfig);
+        let instance = createInstance();
+        actInstance = instance.createActivity(caseA.activityConfig);
         caseA.instances = caseA.instances || [];
-        caseA.instances.push(instance);
+        caseA.instances.push(actInstance);
 
-        instance.run().then(res => {
+        actInstance.run().then(res => {
             ws.send(JSON.stringify({
                 type: "result",
                 data: {
@@ -82,9 +96,9 @@ function startCaseInstance(ws: WebSocket, id: string) {
         });
     }
 
-    instance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
+    actInstance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
         // console.log( act.type, act.name, ACTIVITY_STATUS_MAP[status])
-        const progress = pm.getProgress(instance);
+        const progress = pm.getProgress(actInstance);
 
         ws.send(JSON.stringify({
             type: 'progress',
@@ -94,13 +108,15 @@ function startCaseInstance(ws: WebSocket, id: string) {
             }
         }))
     });
+
 }
 
 function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
 
-    const instance = createActivity(caseItem.activityConfig);
+    let instance = createInstance();
+    let actInstance = instance.createActivity(caseItem.activityConfig);
 
-    instance.run().then(res => {
+    actInstance.run().then(res => {
         ws.send(JSON.stringify({
             type: "result",
             data: {
@@ -109,12 +125,15 @@ function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
                 data: res
             }
         }))
-    }).catch(err=> {
+    }).catch(err => {
         console.log("instance.run error", err)
-    });
+    }).finally(() => {
 
-    instance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
-        const progress = pm.getProgress(instance);
+
+    })
+
+    actInstance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
+        const progress = pm.getProgress(actInstance);
 
         ws.send(JSON.stringify({
             type: 'progress',

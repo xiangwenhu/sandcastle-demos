@@ -55,7 +55,7 @@ function renderCaseList(caseList) {
 
 
 function renderConfigContent(caseItem) {
-  codeContent.value = JSON.stringify(caseItem.activityConfig, undefined, 2);
+  codeContent.value = JSON.stringify(caseItem.activityConfig, undefined, 2).replace(/(__\$\$__function__\$\$__,)/, "");
 }
 
 function renderActTree(id) {

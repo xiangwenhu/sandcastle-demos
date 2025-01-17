@@ -1,4 +1,4 @@
-import { $, createActivity } from "sandcastle";
+import { $ } from "sanddunes";
 
 const activityConfig = $.ifElse({
     name: 'if else 测试',

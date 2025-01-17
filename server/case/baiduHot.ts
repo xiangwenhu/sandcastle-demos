@@ -1,4 +1,4 @@
-import { $, IActivityConfig } from "sandcastle";
+import { $, IActivityConfig } from "sanddunes";
 import fs from "fs"
 import path from "path";
 
@@ -46,7 +46,7 @@ const activityConfig: IActivityConfig = {
                         args: [],
                         async code() {
                             // @ts-ignore
-                            const links = document.querySelector(`[class^=container-bg]`).querySelectorAll(`a[class^="title_"]`) as any as HTMLAnchorElement[];
+                            const links = document.querySelector(`[class^=container-bg]`).querySelectorAll(`a[class^="title_"]`);
 
                             return Array.from(links).map(l => ({
                                 href: l.getAttribute("href"),
