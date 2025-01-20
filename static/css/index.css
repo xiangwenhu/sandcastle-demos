@@ -54,3 +54,7 @@
     height: 400px;
     display: block;
 }
+
+div.code {
+    white-space: pre;
+  }
