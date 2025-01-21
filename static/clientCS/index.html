@@ -7,32 +7,38 @@
     <title>沙堡-客户端配置-服务端执行</title>
   </head>
   <body>
-    <div id="root"></div>
-
     <hr />
-    <div id="act">
-      <button type="button" id="btnRun">执行</button>
+    <div style="display: flex">
+      <div style="flex: 0 0 300px">
+        <div class="header">示例：</div>
+        <div id="cases"></div>
+      </div>
 
-      <div style="display: flex">
-        <div style="flex: 0 0 40%; height: 500px; overflow-y: auto">
-          配置内容
-          <pre>
-                    <textarea id="codeContent"></textarea>
-                </pre>
-        </div>
+      <div style="flex: 0 0 600px">
+        <div class="header">配置内容:</div>
+        <button class="btn" type="button" id="btnRun">执行</button>
+        <button class="btn" type="button" id="btnUpdateFlow">更新流程图</button>
+        <pre id="editor"></pre>
+      </div>
 
-        <div style="flex: 0 0 60%">
-          流程：
-          <div id="progress"></div>
-        </div>
+      <div style="flex: 0 0 500px">
+        <div class="header">流程：</div>
+        <div id="progress"></div>
       </div>
     </div>
+
     <hr />
 
     <div>
       结果:
       <pre id="message"></pre>
     </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.26.0/ace.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
 
     <script>
       // interface CaseItem {

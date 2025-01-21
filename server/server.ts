@@ -13,46 +13,30 @@ wss.on("connection", function (ws) {
                 case "startByConfig":
                     startCaseByConfig(ws as any, data);
                     break;
+                case "getFlowTree":
+                    getFlowTree(ws as any, data)
+                    break;
                 default:
                     break;
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("message error", err);
+            ws.send(JSON.stringify({
+                type: "error",
+                data: err && err.message
+            }))
         }
     })
 });
 
-const $$FuncPlaceholder = "__$$__function__$$__";
-const PropertyWhitelist = ["code", "urlOrPredicate"];
-const converter = new ObjectJSONConverter({
-    funcPlaceholder: $$FuncPlaceholder,
-    propertyWhitelist: PropertyWhitelist
-})
-
-
 
 function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
 
-    const config = converter.toObject(JSON.stringify(caseItem.activityConfig));
+    const config = eval(caseItem.sourceText);
     let instance = createInstance(config);
 
-    instance.run().then(res => {
-        ws.send(JSON.stringify({
-            type: "result",
-            data: {
-                type: caseItem.activityConfig.type,
-                name: caseItem.name,
-                data: res
-            }
-        }))
-    }).catch(err => {
-        console.log("instance.run error", err)
-    }).finally(() => {
 
-
-    })
-
-    instance.messenger?.on("status", function (status: EnumActivityStatus, act: any) {
+    function onStatus(status: EnumActivityStatus, act: any) {
         const progress = pm.getProgress(instance.activity!);
 
         ws.send(JSON.stringify({
@@ -62,5 +46,38 @@ function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
                 progress
             }
         }))
-    });
+    }
+
+    instance.run().then(res => {
+        ws.send(JSON.stringify({
+            type: "result",
+            data: {
+                type: config.type,
+                name: caseItem.name,
+                data: res
+            }
+        }))
+    }).catch(err => {
+        console.log("instance.run error", err)
+    }).finally(() => {
+        instance.messenger!.off("status", onStatus);
+        // @ts-ignore
+        instance = null;
+    })
+
+    instance.messenger?.on("status", onStatus);
+}
+
+
+function getFlowTree(ws: WebSocket, caseItem: CaseItem) {
+    const config = eval(caseItem.sourceText);
+    let instance = createInstance(config);
+    const progress = pm.getProgress(instance.activity!);
+    ws.send(JSON.stringify({
+        type: 'getFlowTree',
+        data: {
+            id: caseItem.id,
+            progress
+        }
+    }))
 }

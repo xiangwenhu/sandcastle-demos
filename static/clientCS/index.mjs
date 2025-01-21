@@ -1,16 +1,16 @@
 import { progressFactory } from "../scripts/progressFactory.mjs";
-import { ObjectJSONConverter } from "../scripts/converter.mjs";
 
-const converter = new ObjectJSONConverter();
+// 代码编辑器
+var codeEditor = ace.edit("editor");
+codeEditor.setTheme("ace/theme/monokai");
+codeEditor.session.setMode("ace/mode/javascript");
 
+// websocket
 const ws = new WebSocket(`ws://${location.hostname}:8080`);
-
 ws.onerror = console.error;
-
 ws.onopen = function () {
   console.log("open....");
 };
-
 ws.onmessage = function message(ev) {
   if (typeof ev.data !== "string") return;
   const data = JSON.parse(ev.data);
@@ -21,13 +21,20 @@ ws.onmessage = function message(ev) {
       break;
     case "result":
       renderResult(data.data);
+      break;
+    case "getFlowTree":
+      renderProgress(data.data.progress, data.data.id);
+      break;
+    case "error":
+      renderError(data.data);
+      break;
     default:
       break;
   }
 };
 
-export function renderCaseList(cases) {
-  const listHtml = cases
+export function renderCaseList(caseList) {
+  const listHtml = caseList
     .map(
       (item) => `<li class='case-item' data-id=${item.id}>${item.title}</li>`
     )
@@ -43,7 +50,7 @@ export function renderCaseList(cases) {
     }
   });
 
-  root.appendChild(ul);
+  cases.appendChild(ul);
 }
 
 async function fetchCaseItem(caseItem) {
@@ -63,12 +70,19 @@ async function renderActTree(id) {
   if (!caseItem.activityConfig) {
     const content = await fetchCaseItem(caseItem);
     const activityConfig = eval(content.trim().replace(/(;)$/, ""));
+    caseItem.sourceText = content;
     caseItem.activityConfig = activityConfig;
   }
 
   renderConfigContent(caseItem);
 
-  renderProgress(caseItem.activityConfig, id);
+  // renderProgress(caseItem);
+  ws.send(
+    JSON.stringify({
+      type: "getFlowTree",
+      data: caseItem,
+    })
+  );
 }
 
 function renderProgress(act, id) {
@@ -79,13 +93,7 @@ function renderProgress(act, id) {
 }
 
 function renderConfigContent(caseItem) {
-  const activityConfig = JSON.parse(
-    converter.toJSON(caseItem.activityConfig), // .replace(/(__\$\$__function__\$\$__,)/, "")
-    undefined,
-    2
-  );
-
-  codeContent.value = JSON.stringify(activityConfig, undefined, 2);
+  codeEditor.setValue(caseItem.sourceText);
 }
 
 btnRun.addEventListener("click", () => {
@@ -95,11 +103,16 @@ btnRun.addEventListener("click", () => {
   const caseItem = caseList.find((c) => c.id == id);
   if (!caseItem) return alert("未找到对应的case");
 
+  if (document.querySelectorAll(".ace_error").length > 0) {
+    return alert("请先修复语法错误");
+  }
+
   try {
     const data = {
       ...caseItem,
-      activityConfig: JSON.parse(codeContent.value),
+      sourceText: codeEditor.getValue(),
     };
+    delete data.activityConfig;
 
     ws.send(
       JSON.stringify({
@@ -111,6 +124,21 @@ btnRun.addEventListener("click", () => {
   } catch (err) {
     message.innerHTML = err && err.message;
   }
+});
+
+btnUpdateFlow.addEventListener("click", () => {
+  const pRoot = document.querySelector(".p-root");
+  if (!pRoot) return;
+  const id = pRoot.dataset.id;
+  const caseItem = caseList.find((c) => c.id == id);
+  if (!caseItem) return alert("未找到对应的case");
+
+  ws.send(
+    JSON.stringify({
+      type: "getFlowTree",
+      data: caseItem,
+    })
+  );
 });
 
 function clearResult() {
@@ -132,6 +160,10 @@ function renderResult(data) {
     data
   );
   message.innerHTML = result;
+}
+
+function renderError(data) {
+  message.innerHTML = `<div class="red">${data}</div>` + message.innerHTML;
 }
 
 (async function () {

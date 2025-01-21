@@ -1,5 +1,5 @@
 .case-item {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .status-0,
@@ -10,51 +10,79 @@
 .status-5,
 .status-9,
 .status-10 {
-    margin: 3px;
+  margin: 3px;
 }
 
 .status-0 {
-    border: 3px solid #696969;
-    color: 696969
+  border: 3px solid #696969;
+  color: 696969;
 }
 
 .status-1 {
-    border: 3px solid #778899;
-    color: #778899
+  border: 3px solid #778899;
+  color: #778899;
 }
 
 .status-2 {
-    border: 3px solid #4169E1;
-    color: #4169E1
+  border: 3px solid #4169e1;
+  color: #4169e1;
 }
 
 .status-3 {
-    border: 3px solid #4682B4;
-    color: #4682B4
+  border: 3px solid #4682b4;
+  color: #4682b4;
 }
 
 .status-4 {
-    border: 3px solid #008B8B;
-    color: #008B8B
+  border: 3px solid #008b8b;
+  color: #008b8b;
 }
 
 .status-5 {
-    border: 3px solid #006400;
-    color: #006400
+  border: 3px solid #006400;
+  color: #006400;
 }
 
-.status-9, .status-10 {
-    border: 3px solid #B22222;
-    color: #B22222
+.status-9,
+.status-10 {
+  border: 3px solid #b22222;
+  color: #b22222;
 }
 
-
-#codeContent{
-    width: 90%;
-    height: 400px;
-    display: block;
+#codeContent {
+  width: 90%;
+  height: 400px;
+  display: block;
 }
 
 div.code {
-    white-space: pre;
-  }
+  white-space: pre;
+}
+
+#editor {
+  /* position: absolute; */
+  position: relative;
+  width: 600px;
+  height: 550px;
+}
+
+.btn {
+  font-size: 16px;
+  background-color: cornflowerblue;
+  color: #fff;
+  border: none;
+  /* line-height: 32px; */
+  cursor: pointer;
+  padding: 6px;
+}
+
+.red {
+  color: red;
+}
+
+.header {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  margin: 6px;
+}

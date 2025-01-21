@@ -6,7 +6,7 @@
     "publish": "npm install && npm run build && pm2 start ./pm2.prod.json"
   },
   "dependencies": {
-    "sanddunes": "file:D:\\projects\\github-my\\sandcastle\\sanddunes-0.0.1002.tgz",
+    "sanddunes": "0.0.1003",
     "ws": "^8.18.0"
   },
   "devDependencies": {
