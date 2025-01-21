@@ -32,7 +32,7 @@ wss.on("connection", function (ws) {
 
 function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
 
-    const config = eval(caseItem.sourceText);
+    const config = eval(caseItem.sourceText!);
     let instance = createInstance(config);
 
 
@@ -70,7 +70,7 @@ function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
 
 
 function getFlowTree(ws: WebSocket, caseItem: CaseItem) {
-    const config = eval(caseItem.sourceText);
+    const config = eval(caseItem.sourceText!);
     let instance = createInstance(config);
     const progress = pm.getProgress(instance.activity!);
     ws.send(JSON.stringify({

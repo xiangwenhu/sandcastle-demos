@@ -7,7 +7,7 @@ export interface CaseItem {
     title: string;
     activityConfig: IActivityConfig;
     instances?: Activity<any, any, any>[];
-    sourceText: string;
+    sourceText?: string;
 }
 
 export default class CaseManager {
