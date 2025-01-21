@@ -7,11 +7,13 @@ export const progressFactory = {
         4: '执行中',
         5: '执行完毕',
         9: '异常',
-        10: '终止'
+        10: '终止',
+        // 没状态
+        99: ''
     },
     fromServer: true,
     build(data) {
-        data.status = data.status || '0'
+        data.status = data.status || '99';
         let childrenHTML = Array.isArray(data.children) ? this.buildChildren(data.children) : '',
             result = `
             <ul>
@@ -28,7 +30,7 @@ export const progressFactory = {
             return ''
         }
         return '<ul>' + children.map(child => {
-            child.status = child.status || '0'
+            child.status = child.status || '99'
             return `              
                 <li data-id='${child.id}' class='status-${child.status}' data-type='${child.type}' title = "${child.error ? this.escape(child.error.message + child.error._stack) : ''}">
                     ${child.name} - ${this.mapping[child.status]} ${child.status == 4 ? '<img src="../images/loading.gif">' : ''}

@@ -42,10 +42,19 @@ export function renderCaseList(caseList) {
 
   const ul = document.createElement("ul");
   ul.innerHTML = listHtml;
+
+  setTimeout(() => {
+    document.querySelector(".case-item").click();
+  }, 0);
+
   ul.addEventListener("click", (ev) => {
     console.log("ev.data:", ev);
     if (ev.target.tagName == "LI") {
+      [...document.querySelectorAll(".case-item.active")].forEach((el) => {
+        el.classList.remove("active");
+      });
       const id = ev.target.dataset.id;
+      ev.target.classList.add("active");
       renderActTree(id);
     }
   });
@@ -132,11 +141,15 @@ btnUpdateFlow.addEventListener("click", () => {
   const id = pRoot.dataset.id;
   const caseItem = caseList.find((c) => c.id == id);
   if (!caseItem) return alert("未找到对应的case");
-
+  const data = {
+    ...caseItem,
+    sourceText: codeEditor.getValue(),
+  };
+  delete data.activityConfig;
   ws.send(
     JSON.stringify({
       type: "getFlowTree",
-      data: caseItem,
+      data,
     })
   );
 });

@@ -1,5 +1,17 @@
+html {
+  background-color: #f6f8fa;;
+}
+
+
 .case-item {
   cursor: pointer;
+  font-size: 18px;
+  padding-left: 8px;
+}
+
+.case-item.active {
+  background-color:cornflowerblue;
+  color: #fff;
 }
 
 .status-0,

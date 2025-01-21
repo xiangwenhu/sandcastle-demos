@@ -57,8 +57,12 @@ function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
                 data: res
             }
         }))
-    }).catch(err => {
+    }).catch((err: any) => {
         console.log("instance.run error", err)
+        ws.send(JSON.stringify({
+            type: "error",
+            data: err && err.message
+        }))
     }).finally(() => {
         instance.messenger!.off("status", onStatus);
         // @ts-ignore
