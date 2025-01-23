@@ -15,8 +15,8 @@
       "--unsafely-treat-insecure-origin-as-secure",
     ],
     timeout: 60 * 1000,
-    executablePath:
-      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    // executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    executablePath: "/usr/bin/google-chrome",
   },
   children: [
     {
