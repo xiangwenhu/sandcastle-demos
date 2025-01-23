@@ -1,4 +1,5 @@
 import { CaseItem } from "./case/CaseManager";
+import { containsDangerousCode } from "./code";
 
 import { wss } from "./wss";
 import { createInstance, EnumActivityStatus, ObjectJSONConverter } from "sanddunes";
@@ -7,6 +8,11 @@ import pm from "sanddunes/dist/progress/index"
 wss.on("connection", function (ws) {
     ws.on("message", (buffer) => {
         try {
+            const codeStr = buffer.toString();
+            if (containsDangerousCode( `(${codeStr})`)) {
+                throw new Error("包含不安全的代码内容");
+            }
+
             const jsonData = JSON.parse(buffer.toString());
             const { type, data } = jsonData;
             switch (type) {
@@ -28,7 +34,6 @@ wss.on("connection", function (ws) {
         }
     })
 });
-
 
 function startCaseByConfig(ws: WebSocket, caseItem: CaseItem) {
 
